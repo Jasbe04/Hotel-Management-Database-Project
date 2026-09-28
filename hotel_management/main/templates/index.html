@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel Management - Data Entry Forms</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f6f9;
+      color: #2c3e50;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 620px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
+      padding: 28px 32px;
+    }
+
+    h1 {
+      font-size: 22px;
+      color: #1a5276;
+      margin-bottom: 4px;
+    }
+
+    .sub {
+      font-size: 13px;
+      color: #7f8c8d;
+      margin-bottom: 20px;
+    }
+
+    .nav {
+      margin-bottom: 18px;
+      font-size: 13px;
+    }
+
+    .nav a {
+      color: #2980b9;
+      text-decoration: none;
+      margin-right: 12px;
+    }
+
+    .nav a:hover {
+      text-decoration: underline;
+    }
+
+    fieldset {
+      border: 1px solid #dfe4ea;
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+    }
+
+    legend {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a5276;
+      padding: 0 6px;
+    }
+
+    .row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .field {
+      flex: 1 1 45%;
+      margin-bottom: 12px;
+    }
+
+    .field.full {
+      flex: 1 1 100%;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    label .req {
+      color: #c0392b;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 8px 10px;
+      border: 1px solid #c8d0d9;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #2980b9;
+      box-shadow: 0 0 0 2px rgba(41, 128, 185, .15);
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #95a5a6;
+      margin-top: 3px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 22px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .submit {
+      background: #1a5276;
+      color: #fff;
+    }
+
+    .submit:hover {
+      background: #144a68;
+    }
+
+    .reset {
+      background: #ecf0f1;
+      color: #2c3e50;
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="container">
+    <h1>Hotel Management System</h1>
+    <p class="sub">Data entry forms based on the project ER diagram</p>
+    <div class="nav">
+      <a href="guest_form.html">Guest</a>
+      <a href="category_form.html">Room Category</a>
+      <a href="room_form.html">Room</a>
+      <a href="reservation_form.html">Reservation</a>
+      <a href="invoice_form.html">Invoice</a>
+
+    </div>
+    <fieldset>
+      <legend>Form Menu</legend>
+      <p style="font-size:14px; line-height:1.9;">
+        1. <a href="guest_form.html" style="color:#2980b9;">Guest Form</a> — registers a new guest (entity:
+        <b>guest</b>)<br>
+        2. <a href="category_form.html" style="color:#2980b9;">Room Category Form</a> — defines room types (entity:
+        <b>category</b>)<br>
+        3. <a href="room_form.html" style="color:#2980b9;">Room Form</a> — adds a room, linked to a category (entities:
+        <b>room</b>, relationship: <b>categorizes</b>)<br>
+        4. <a href="reservation_form.html" style="color:#2980b9;">Reservation Form</a> — books a room for a guest
+        (entities: <b>reservation</b>, relationships: <b>books</b>, <b>reserves</b>)<br>
+        <!-- 5. <a href="invoice_form.html" style="color:#2980b9;">Invoice Form</a> — generates a bill for a reservation
+        (entity: <b>invoice</b>, relationship: <b>generates</b>) -->
+      </p>
+    </fieldset>
+    <p class="hint">Foreign keys (Guest, Room, Reservation, Category) are selected from dropdown lists loaded with
+      sample data, as required by the assignment.</p>
+  </div>
+</body>
+
+</html>

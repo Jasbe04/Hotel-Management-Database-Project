@@ -46,15 +46,9 @@ def category_list_view(request):
 
 def booking_source_list_view(request):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT name FROM booking_source")
+        cursor.execute("SELECT booking_source_id, name FROM booking_source ORDER BY booking_source_id")
         sources = cursor.fetchall()
     return render(request, 'booking_source_list.html', {'sources': sources})
-
-def payment_method_list_view(request):
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT payment_method_name FROM payment_method")
-        sources = cursor.fetchall()
-    return render(request, 'payment_method_list.html', {'sources': sources})
 
 
 def invoice_list_view(request):
@@ -194,37 +188,6 @@ def get_available_rooms(request):
     })
 
 
-def search_guests(request):
-    q = request.GET.get('q', '').strip()
-    like = f"%{q}%"
-
-    with connection.cursor() as cursor:
-        if q:
-            cursor.execute("""
-                SELECT guest_id, guest_name, nid, phone_number
-                FROM guest
-                WHERE guest_name LIKE %s OR nid LIKE %s OR phone_number LIKE %s
-                ORDER BY guest_name
-                LIMIT 10
-            """, [like, like, like])
-        else:
-            # No query yet: show the most recently added guests
-            cursor.execute("""
-                SELECT guest_id, guest_name, nid, phone_number
-                FROM guest
-                ORDER BY guest_id DESC
-                LIMIT 10
-            """)
-        rows = cursor.fetchall()
-
-    return JsonResponse({
-        'guests': [
-            {'guest_id': r[0], 'guest_name': r[1], 'nid': r[2], 'phone_number': r[3]}
-            for r in rows
-        ]
-    })
-
-
 # ======================= FORM VIEWS =======================
 
 # 1. Guest
@@ -343,9 +306,6 @@ def reservation_view(request):
         except (TypeError, ValueError):
             nights = 0
 
-        if not guest_id:
-            messages.error(request, "Please select a guest from the search results.")
-            return redirect('reservation')
         if not room_numbers:
             messages.error(request, "Please select at least one room.")
             return redirect('reservation')
@@ -436,7 +396,10 @@ def reservation_view(request):
         return redirect('reservation')
 
     with connection.cursor() as cursor:
+        cursor.execute("SELECT guest_id, guest_name, nid FROM guest")
+        guests = cursor.fetchall()
+
         cursor.execute("SELECT booking_source_id, name FROM booking_source")
         sources = cursor.fetchall()
 
-    return render(request, 'reservation_form.html', {'sources': sources})
+    return render(request, 'reservation_form.html', {'guests': guests, 'sources': sources})

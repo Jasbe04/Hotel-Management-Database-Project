@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="toolbar">
+  <a href="{% url 'room' %}" class="submit">+ New Room</a>
+</div>
+
+<div style="overflow-x:auto;">
+  <table class="data-table">
+    <thead>
+      <tr><th>Room Number</th><th>Category</th><th class="num">Rate / Night ($)</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      {% for r in rooms %}
+      <tr>
+        <td>{{ r.0 }}</td>
+        <td>{{ r.1 }}</td>
+        <td class="num">{{ r.2 }}</td>
+        <td>{{ r.3|title }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4" style="text-align:center;">No rooms found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

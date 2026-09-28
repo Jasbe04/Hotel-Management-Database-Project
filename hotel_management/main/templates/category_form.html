@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<a class="list-link" href="{% url 'category_list' %}">View all categories →</a>
 <form action="{% url 'category' %}" method="POST">
   {% csrf_token %}
   <fieldset>

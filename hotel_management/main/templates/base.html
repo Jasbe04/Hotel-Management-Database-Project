@@ -25,7 +25,7 @@
 
     .container {
       width: 100%;
-      max-width: 760px;
+      max-width: 1000px;
       background: #ffffff;
       border-radius: 12px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -162,6 +162,16 @@
       font-size: 13px;
     }
 
+    .alert-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+
     /* Buttons */
     .actions {
       display: flex;
@@ -182,6 +192,58 @@
     .submit {
       background: #1a5276;
       color: #fff;
+    }
+
+    a.submit {
+      display: inline-block;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .list-link {
+      display: inline-block;
+      margin-bottom: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #2980b9;
+      text-decoration: none;
+    }
+
+    .list-link:hover { text-decoration: underline; }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .data-table th {
+      background: #f1f5f9;
+      color: #1a5276;
+      text-align: left;
+      padding: 10px 12px;
+      border: 1px solid #dfe4ea;
+      white-space: nowrap;
+    }
+
+    .data-table td {
+      padding: 9px 12px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .data-table tbody tr:hover { background: #f8fafc; }
+    .data-table td.num, .data-table th.num { text-align: right; }
+    .data-table tfoot td { font-weight: 700; background: #f8fafc; }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
     }
 
     .submit:hover {
@@ -216,19 +278,19 @@
       <p class="sub">Data Entry Form Management</p>
     </div>
 
-    <!-- Navigation Bar without Registration and Invoice -->
     <nav class="nav">
-      <a href="{% url 'guest' %}" class="nav-link">Guest</a>
-      <a href="{% url 'room' %}" class="nav-link">Room</a>
-      <a href="{% url 'category' %}" class="nav-link">Category</a>
-      <a href="{% url 'booking_source' %}" class="nav-link">Booking Source</a>
+      <a href="{% url 'guest' %}" class="nav-link" data-paths="{% url 'guest_list' %}">Guest</a>
+      <a href="{% url 'room' %}" class="nav-link" data-paths="{% url 'room_list' %}">Room</a>
+      <a href="{% url 'category' %}" class="nav-link" data-paths="{% url 'category_list' %}">Category</a>
+      <a href="{% url 'booking_source' %}" class="nav-link" data-paths="{% url 'booking_source_list' %}">Booking Source</a>
       <a href="{% url 'payment_method' %}" class="nav-link">Payment Method</a>
-      <a href="{% url 'reservation' %}" class="nav-link">Reservation</a>
+      <a href="{% url 'reservation' %}" class="nav-link" data-paths="{% url 'reservation_list' %}">Reservation</a>
+      <a href="{% url 'invoice_list' %}" class="nav-link" data-paths="{% url 'revenue_report' %}">Invoice</a>
     </nav>
 
     {% if messages %}
       {% for message in messages %}
-        <div class="alert-success">{{ message }}</div>
+        <div class="alert-{{ message.tags }}">{{ message }}</div>
       {% endfor %}
     {% endif %}
 
@@ -237,9 +299,6 @@
       {% endblock %}
     </main>
 
-    <footer class="footer">
-      <p>Foreign keys are loaded dynamically from database tables.</p>
-    </footer>
   </div>
 
   <script>
@@ -248,7 +307,8 @@
       const navLinks = document.querySelectorAll(".nav-link");
 
       navLinks.forEach(link => {
-        if (link.getAttribute("href") === currentPath) {
+        const paths = [link.getAttribute("href")].concat((link.dataset.paths || "").split(" "));
+        if (paths.includes(currentPath)) {
           link.classList.add("active");
         }
       });

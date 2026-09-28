@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="toolbar">
+  <a href="{% url 'booking_source' %}" class="submit">+ New Booking Source</a>
+</div>
+
+<div style="overflow-x:auto;">
+  <table class="data-table">
+    <thead>
+      <tr><th>Booking Source</th></tr>
+    </thead>
+    <tbody>
+      {% for s in sources %}
+      <tr>
+        <td>{{ s.0 }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="2" style="text-align:center;">No booking sources found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

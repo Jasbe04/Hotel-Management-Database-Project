@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+<a class="list-link" href="{% url 'payment_method_list' %}">View all payment methods →</a>
 <form action="{% url 'payment_method' %}" method="POST">
   {% csrf_token %}
   <fieldset>

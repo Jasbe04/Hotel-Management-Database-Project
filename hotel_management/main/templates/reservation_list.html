@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="actions" style="margin-bottom:16px; display:flex; gap:12px; align-items:center;">
+  <a href="{% url 'reservation' %}" class="submit">+ New Reservation</a>
+
+  <form method="GET" action="{% url 'reservation_list' %}">
+    <select name="status" onchange="this.form.submit()">
+      <option value="">All statuses</option>
+      {% for s in statuses %}
+        <option value="{{ s }}" {% if s == selected_status %}selected{% endif %}>
+          {{ s|title }}
+        </option>
+      {% endfor %}
+    </select>
+  </form>
+</div>
+
+<div style="overflow-x:auto;">
+  <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Guest</th>
+        <th>Phone</th>
+        <th>Source</th>
+        <th>Room(s)</th>
+        <th>Check In</th>
+        <th>Check Out</th>
+        <th>Status</th>
+        <th>Departed From</th>
+        <th>Reason</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in reservations %}
+      <tr>
+        <td>{{ r.0 }}</td>
+        <td>{{ r.1 }}</td>
+        <td>{{ r.2 }}</td>
+        <td>{{ r.3 }}</td>
+        <td>{{ r.4|default:"—" }}</td>
+        <td>{{ r.5|date:"d M Y" }}</td>
+        <td>{{ r.6|date:"d M Y" }}</td>
+        <td>{{ r.7|title }}</td>
+        <td>{{ r.8 }}</td>
+        <td>{{ r.9 }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="10" style="text-align:center;">No reservations found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

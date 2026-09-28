@@ -1,20 +1,79 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form action="{% url 'reservation' %}" method="POST">
+<style>
+  .room-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 8px;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: #fff;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .room-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 8px 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .room-item:hover { background: #f8fafc; }
+  .room-item input { width: auto; }
+  .room-hint { font-size: 12px; color: #7f8c8d; margin-top: 6px; }
+  .room-list .room-hint { grid-column: 1 / -1; margin: 0; }
+
+  .guest-search { position: relative; }
+  .guest-results {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    margin-top: 4px;
+    background: #fff;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    max-height: 240px;
+    overflow-y: auto;
+  }
+  .guest-results.open { display: block; }
+  .guest-option {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    border-bottom: 1px solid #f0f3f6;
+  }
+  .guest-option:last-child { border-bottom: none; }
+  .guest-option:hover, .guest-option.active { background: #f1f5f9; }
+  .guest-option small { display: block; color: #7f8c8d; margin-top: 2px; }
+  .guest-empty { padding: 8px 12px; font-size: 13px; color: #7f8c8d; }
+  .guest-selected { border-color: #27ae60; background: #f6fdf8; }
+</style>
+
+<a class="list-link" href="{% url 'reservation_list' %}">View all reservations →</a>
+<form action="{% url 'reservation' %}" method="POST" id="reservation_form">
   {% csrf_token %}
   <fieldset>
     <legend>Reservation Details</legend>
-    
+
     <div class="row">
       <div class="field">
         <label>Select Guest <span class="req">*</span></label>
-        <select name="guest_id" required>
-          <option value="" disabled selected>Select Guest</option>
-          {% for guest in guests %}
-            <option value="{{ guest.0 }}">{{ guest.1 }} (NID: {{ guest.2 }})</option>
-          {% endfor %}
-        </select>
+        <div class="guest-search">
+          <input type="text" id="guest_search" placeholder="Search by name, NID or phone" autocomplete="off">
+          <input type="hidden" name="guest_id" id="guest_id">
+          <div id="guest_results" class="guest-results"></div>
+        </div>
+        <p class="room-hint">Type to search, then click a guest to select.</p>
       </div>
       <div class="field">
         <label>Select Booking Source <span class="req">*</span></label>
@@ -29,14 +88,26 @@
 
     <div class="row">
       <div class="field">
-        <label>Select Room <span class="req">*</span></label>
-        <select name="room_number" required>
-          <option value="" disabled selected>Select Room</option>
-          {% for room in rooms %}
-            <option value="{{ room.0 }}">Room {{ room.0 }} (Status: {{ room.1 }})</option>
-          {% endfor %}
-        </select>
+        <label>Check In Date <span class="req">*</span></label>
+        <input type="date" id="check_in_date" name="check_in_date" required>
       </div>
+      <div class="field">
+        <label>Check Out Date <span class="req">*</span></label>
+        <input type="date" id="check_out_date" name="check_out_date" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field full">
+        <label>Select Room(s) <span class="req">*</span></label>
+        <div id="room_list" class="room-list">
+          <p class="room-hint">Select Check In/Out Dates First</p>
+        </div>
+        <p id="room_summary" class="room-hint"></p>
+      </div>
+    </div>
+
+    <div class="row">
       <div class="field">
         <label>Reservation Status <span class="req">*</span></label>
         <select name="reservation_status" required>
@@ -46,17 +117,6 @@
           <option value="checked_out">Checked Out</option>
           <option value="cancelled">Cancelled</option>
         </select>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="field">
-        <label>Check In Date <span class="req">*</span></label>
-        <input type="date" name="check_in_date" required>
-      </div>
-      <div class="field">
-        <label>Check Out Date <span class="req">*</span></label>
-        <input type="date" name="check_out_date" required>
       </div>
     </div>
 
@@ -77,4 +137,196 @@
     <button type="reset" class="reset">Reset</button>
   </div>
 </form>
+
+<script>
+  const form = document.getElementById('reservation_form');
+  const checkInInput = document.getElementById('check_in_date');
+  const checkOutInput = document.getElementById('check_out_date');
+  const roomList = document.getElementById('room_list');
+  const roomSummary = document.getElementById('room_summary');
+
+  function setHint(text) {
+    roomList.innerHTML = '';
+    const p = document.createElement('p');
+    p.className = 'room-hint';
+    p.textContent = text;
+    roomList.appendChild(p);
+    roomSummary.textContent = '';
+  }
+
+  function nights() {
+    const diff = (new Date(checkOutInput.value) - new Date(checkInInput.value)) / 86400000;
+    return Math.round(diff);
+  }
+
+  function updateSummary() {
+    const checked = roomList.querySelectorAll('input[type=checkbox]:checked');
+    if (checked.length === 0) { roomSummary.textContent = ''; return; }
+    const n = nights();
+    let perNight = 0;
+    checked.forEach(cb => perNight += parseFloat(cb.dataset.rate));
+    roomSummary.textContent =
+      `${checked.length} room(s) selected · estimated total $${(perNight * n).toFixed(2)} for ${n} night(s)`;
+  }
+
+  async function fetchAvailableRooms() {
+    const checkIn = checkInInput.value;
+    const checkOut = checkOutInput.value;
+    if (!checkIn || !checkOut) return;
+
+    setHint('Loading rooms...');
+
+    try {
+      const response = await fetch(`/api/available-rooms/?check_in=${checkIn}&check_out=${checkOut}`);
+      const data = await response.json();
+
+      if (data.rooms.length === 0) {
+        setHint('No rooms available for these dates');
+        return;
+      }
+
+      roomList.innerHTML = '';
+      data.rooms.forEach(room => {
+        const label = document.createElement('label');
+        label.className = 'room-item';
+
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.name = 'room_numbers';
+        cb.value = room.room_number;
+        cb.dataset.rate = room.rate;
+
+        const text = document.createElement('span');
+        text.textContent = `Room ${room.room_number} (${room.category_name}) · $${room.rate.toFixed(2)}/night`;
+
+        label.appendChild(cb);
+        label.appendChild(text);
+        roomList.appendChild(label);
+      });
+      roomSummary.textContent = '';
+    } catch (error) {
+      console.error('Error fetching rooms:', error);
+      setHint('Error loading rooms');
+    }
+  }
+
+  checkInInput.addEventListener('change', fetchAvailableRooms);
+  checkOutInput.addEventListener('change', fetchAvailableRooms);
+  roomList.addEventListener('change', updateSummary);
+
+  // ---------- Guest search (AJAX autocomplete) ----------
+  const guestSearch = document.getElementById('guest_search');
+  const guestIdInput = document.getElementById('guest_id');
+  const guestResults = document.getElementById('guest_results');
+  let guestTimer = null;
+  let guestRequestId = 0;
+  let activeIndex = -1;
+
+  function closeGuestResults() {
+    guestResults.classList.remove('open');
+    activeIndex = -1;
+  }
+
+  function selectGuest(g) {
+    guestIdInput.value = g.guest_id;
+    guestSearch.value = `${g.guest_name} (NID: ${g.nid})`;
+    guestSearch.classList.add('guest-selected');
+    closeGuestResults();
+  }
+
+  function renderGuests(guests) {
+    guestResults.innerHTML = '';
+    if (guests.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'guest-empty';
+      empty.textContent = 'No guests found';
+      guestResults.appendChild(empty);
+    } else {
+      guests.forEach(g => {
+        const item = document.createElement('div');
+        item.className = 'guest-option';
+
+        const name = document.createElement('span');
+        name.textContent = g.guest_name;
+
+        const meta = document.createElement('small');
+        meta.textContent = `NID: ${g.nid} · Phone: ${g.phone_number}`;
+
+        item.appendChild(name);
+        item.appendChild(meta);
+        // mousedown fires before the input's blur, so the click isn't lost
+        item.addEventListener('mousedown', (e) => { e.preventDefault(); selectGuest(g); });
+        guestResults.appendChild(item);
+      });
+    }
+    activeIndex = -1;
+    guestResults.classList.add('open');
+  }
+
+  async function fetchGuests() {
+    const q = guestSearch.value.trim();
+    const myId = ++guestRequestId;
+    try {
+      const response = await fetch(`/api/search-guests/?q=${encodeURIComponent(q)}`);
+      const data = await response.json();
+      if (myId !== guestRequestId) return; // a newer search superseded this one
+      renderGuests(data.guests);
+    } catch (error) {
+      console.error('Error searching guests:', error);
+    }
+  }
+
+  guestSearch.addEventListener('input', () => {
+    // Typing invalidates any previous selection
+    guestIdInput.value = '';
+    guestSearch.classList.remove('guest-selected');
+    clearTimeout(guestTimer);
+    guestTimer = setTimeout(fetchGuests, 250);
+  });
+
+  guestSearch.addEventListener('focus', () => {
+    if (!guestIdInput.value) fetchGuests();
+  });
+
+  guestSearch.addEventListener('blur', closeGuestResults);
+
+  guestSearch.addEventListener('keydown', (e) => {
+    const items = guestResults.querySelectorAll('.guest-option');
+    if (!items.length || !guestResults.classList.contains('open')) return;
+
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      activeIndex = e.key === 'ArrowDown'
+        ? (activeIndex + 1) % items.length
+        : (activeIndex - 1 + items.length) % items.length;
+      items.forEach((el, i) => el.classList.toggle('active', i === activeIndex));
+      items[activeIndex].scrollIntoView({ block: 'nearest' });
+    } else if (e.key === 'Enter' && activeIndex >= 0) {
+      e.preventDefault();
+      items[activeIndex].dispatchEvent(new MouseEvent('mousedown'));
+    } else if (e.key === 'Escape') {
+      closeGuestResults();
+    }
+  });
+
+  form.addEventListener('reset', () => {
+    setHint('Select Check In/Out Dates First');
+    guestIdInput.value = '';
+    guestSearch.classList.remove('guest-selected');
+    closeGuestResults();
+  });
+
+  form.addEventListener('submit', (e) => {
+    if (!guestIdInput.value) {
+      e.preventDefault();
+      alert('Please select a guest from the search results.');
+      guestSearch.focus();
+      return;
+    }
+    if (roomList.querySelectorAll('input[type=checkbox]:checked').length === 0) {
+      e.preventDefault();
+      alert('Please select at least one room.');
+    }
+  });
+</script>
 {% endblock %}

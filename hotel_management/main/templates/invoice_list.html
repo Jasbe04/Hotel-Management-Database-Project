@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="toolbar">
+  <a href="{% url 'revenue_report' %}" class="submit">Monthly Revenue Report →</a>
+  <span style="font-size:13px; color:#7f8c8d;">Invoices are generated automatically when a reservation is created.</span>
+</div>
+
+<div style="overflow-x:auto;">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Invoice #</th><th>Reservation</th><th>Guest</th><th>Room(s)</th><th>Charges</th>
+        <th>Check In</th><th>Check Out</th><th>Invoice Date</th>
+        <th class="num">Total ($)</th><th class="num">Paid ($)</th>
+        <th class="num">Due ($)</th><th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in invoices %}
+      <tr>
+        <td>{{ i.0 }}</td>
+        <td>#{{ i.1 }}</td>
+        <td>{{ i.2 }}</td>
+        <td>{{ i.3|default:"—" }}</td>
+        <td style="font-size:12px;">{{ i.11|default:"—" }}</td>
+        <td>{{ i.4|date:"d M Y" }}</td>
+        <td>{{ i.5|date:"d M Y" }}</td>
+        <td>{{ i.6|date:"d M Y" }}</td>
+        <td class="num">{{ i.7 }}</td>
+        <td class="num">{{ i.8 }}</td>
+        <td class="num">{{ i.9 }}</td>
+        <td>{{ i.10|title }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="12" style="text-align:center;">No invoices found.</td></tr>
+      {% endfor %}
+    </tbody>
+    {% if invoices %}
+    <tfoot>
+      <tr>
+        <td colspan="8" class="num">Totals</td>
+        <td class="num">{{ total_sum }}</td>
+        <td class="num">{{ paid_sum }}</td>
+        <td class="num">{{ due_sum }}</td>
+        <td></td>
+      </tr>
+    </tfoot>
+    {% endif %}
+  </table>
+</div>
+{% endblock %}
