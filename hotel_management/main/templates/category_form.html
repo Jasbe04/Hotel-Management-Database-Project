@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/submit-category" method="POST">
+  <fieldset>
+    <legend>Room Category Definition</legend>
+    <div class="row">
+      <div class="field">
+        <label>Category Name <span class="req">*</span></label>
+        <input type="text" name="category_name" placeholder="Deluxe Suite" required>
+      </div>
+      <div class="field">
+        <label>Base Price per Night ($) <span class="req">*</span></label>
+        <input type="number" step="0.01" name="base_price" placeholder="120.00" required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>Max Occupancy <span class="req">*</span></label>
+        <input type="number" name="max_occupancy" min="1" value="2" required>
+      </div>
+      <div class="field">
+        <label>Bed Type <span class="req">*</span></label>
+        <select name="bed_type" required>
+          <option value="" disabled selected>Select Bed Type</option>
+          <option value="Single">Single</option>
+          <option value="Double">Double</option>
+          <option value="Queen">Queen</option>
+          <option value="King">King</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field full">
+        <label>Description & Amenities</label>
+        <textarea name="description" rows="3" placeholder="Features, view, included amenities..."></textarea>
+      </div>
+    </div>
+  </fieldset>
+  <div class="actions">
+    <button type="submit" class="submit">Save Category</button>
+    <button type="reset" class="reset">Reset</button>
+  </div>
+</form>
+{% endblock %}

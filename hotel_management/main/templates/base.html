@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel Management System</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+
+    body {
+      background: #f4f6f9;
+      color: #2c3e50;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 760px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      padding: 32px 36px;
+    }
+
+    .header {
+      margin-bottom: 20px;
+      border-bottom: 2px solid #f0f3f6;
+      padding-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #1a5276;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .sub {
+      font-size: 14px;
+      color: #7f8c8d;
+    }
+
+    /* Navigation Styling */
+    .nav {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      background: #f8fafc;
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .nav a {
+      flex: 1 1 calc(25% - 6px);
+      text-align: center;
+      padding: 8px 10px;
+      color: #4a5568;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .nav a:hover {
+      background: #edf2f7;
+      color: #1a5276;
+    }
+
+    .nav a.active {
+      background: #1a5276;
+      color: #ffffff;
+      box-shadow: 0 2px 4px rgba(26, 82, 118, 0.2);
+    }
+
+    /* Forms & Fieldsets */
+    fieldset {
+      border: 1px solid #dfe4ea;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 20px;
+      background: #fafbfc;
+    }
+
+    legend {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a5276;
+      padding: 0 8px;
+    }
+
+    .row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .field {
+      flex: 1 1 calc(50% - 8px);
+      margin-bottom: 14px;
+      min-width: 220px;
+    }
+
+    .field.full {
+      flex: 1 1 100%;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #34495e;
+    }
+
+    label .req {
+      color: #e74c3c;
+      margin-left: 2px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 14px;
+      background-color: #fff;
+      color: #2c3e50;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #2980b9;
+      box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.15);
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #7f8c8d;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* Buttons */
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    button {
+      padding: 10px 24px;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .submit {
+      background: #1a5276;
+      color: #fff;
+    }
+
+    .submit:hover {
+      background: #144a68;
+    }
+
+    .reset {
+      background: #e2e8f0;
+      color: #4a5568;
+    }
+
+    .reset:hover {
+      background: #cbd5e1;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px dashed #e2e8f0;
+      font-size: 12px;
+      color: #94a3b8;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- Header Section -->
+    <div class="header">
+      <h1>Hotel Management System</h1>
+      <p class="sub">Data Entry Form Management</p>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav">
+      <a href="registration_form.html" class="nav-link">Registration</a>
+      <a href="guest_form.html" class="nav-link">Guest</a>
+      <a href="room_form.html" class="nav-link">Room</a>
+      <a href="category_form.html" class="nav-link">Category</a>
+      <a href="booking_source_form.html" class="nav-link">Booking Source</a>
+      <a href="payment_method_form.html" class="nav-link">Payment Method</a>
+      <a href="reservation_form.html" class="nav-link">Reservation</a>
+      <a href="invoice_form.html" class="nav-link">Invoice</a>
+    </nav>
+
+    <!-- Main Dynamic Content Block -->
+    <main id="content">
+      {% block content %}
+      <!-- Extending pages will place their form fields here -->
+      {% endblock %}
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="footer">
+      <p class="hint">Foreign keys (Guest, Room, Reservation, Category, Booking Source, Payment Method) are populated dynamically or from predefined data sources.</p>
+    </footer>
+  </div>
+
+  <script>
+    // Automatically highlights the active nav link based on current page URL
+    document.addEventListener("DOMContentLoaded", () => {
+      const currentPath = window.location.pathname.split("/").pop();
+      const navLinks = document.querySelectorAll(".nav-link");
+
+      navLinks.forEach(link => {
+        if (link.getAttribute("href") === currentPath) {
+          link.classList.add("active");
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

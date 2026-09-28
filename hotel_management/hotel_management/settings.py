@@ -73,14 +73,27 @@ WSGI_APPLICATION = 'hotel_management.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
+#This is ELLEEN's Database 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'hotel_management',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '3308',
+#     }
+# }
+
+# This is JASBE's Database 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'hotel_management',
+        'NAME': 'hotel_management_database_project',
         'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3308',
+        'PASSWORD': 'Jasbe@12345',          
+        'HOST': '127.0.0.1',
+        'PORT': '3306',
     }
 }
 

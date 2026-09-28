@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/submit-payment-method" method="POST">
+  <fieldset>
+    <legend>Payment Method Configuration</legend>
+    <div class="row">
+      <div class="field">
+        <label>Payment Method Name <span class="req">*</span></label>
+        <input type="text" name="method_name" placeholder="Credit Card / Cash / Bank Transfer" required>
+      </div>
+      <div class="field">
+        <label>Status <span class="req">*</span></label>
+        <select name="status" required>
+          <option value="Active">Active</option>
+          <option value="Inactive">Inactive</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field full">
+        <label>Processing Notes / Instructions</label>
+        <textarea name="notes" rows="2" placeholder="e.g., Merchant account ID or handling fee details"></textarea>
+      </div>
+    </div>
+  </fieldset>
+  <div class="actions">
+    <button type="submit" class="submit">Save Payment Method</button>
+    <button type="reset" class="reset">Reset</button>
+  </div>
+</form>
+{% endblock %}

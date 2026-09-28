@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/submit-guest" method="POST">
+  <fieldset>
+    <legend>Guest Details</legend>
+    <div class="row">
+      <div class="field">
+        <label>First Name <span class="req">*</span></label>
+        <input type="text" name="first_name" placeholder="John" required>
+      </div>
+      <div class="field">
+        <label>Last Name <span class="req">*</span></label>
+        <input type="text" name="last_name" placeholder="Doe" required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>Email Address <span class="req">*</span></label>
+        <input type="email" name="email" placeholder="john@example.com" required>
+      </div>
+      <div class="field">
+        <label>Phone Number <span class="req">*</span></label>
+        <input type="tel" name="phone" placeholder="+1 234 567 890" required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>ID Type <span class="req">*</span></label>
+        <select name="id_type" required>
+          <option value="" disabled selected>Select ID Type</option>
+          <option value="Passport">Passport</option>
+          <option value="National ID">National ID</option>
+          <option value="Driver License">Driver's License</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>ID / Passport Number <span class="req">*</span></label>
+        <input type="text" name="id_number" placeholder="A12345678" required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field full">
+        <label>Address</label>
+        <textarea name="address" rows="2" placeholder="Street Address, City, Country"></textarea>
+      </div>
+    </div>
+  </fieldset>
+  <div class="actions">
+    <button type="submit" class="submit">Save Guest</button>
+    <button type="reset" class="reset">Reset</button>
+  </div>
+</form>
+{% endblock %}

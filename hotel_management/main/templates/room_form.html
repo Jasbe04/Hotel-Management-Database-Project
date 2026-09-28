@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/submit-room" method="POST">
+  <fieldset>
+    <legend>Room Management</legend>
+    <div class="row">
+      <div class="field">
+        <label>Room Number <span class="req">*</span></label>
+        <input type="text" name="room_number" placeholder="101" required>
+      </div>
+      <div class="field">
+        <label>Floor <span class="req">*</span></label>
+        <input type="number" name="floor" placeholder="1" min="1" required>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label>Room Category <span class="req">*</span></label>
+        <select name="category_id" required>
+          <option value="" disabled selected>Select Category</option>
+          <option value="1">Standard Single</option>
+          <option value="2">Deluxe Double</option>
+          <option value="3">Executive Suite</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Status <span class="req">*</span></label>
+        <select name="status" required>
+          <option value="Available">Available</option>
+          <option value="Occupied">Occupied</option>
+          <option value="Maintenance">Maintenance</option>
+          <option value="Cleaning">Cleaning</option>
+        </select>
+      </div>
+    </div>
+  </fieldset>
+  <div class="actions">
+    <button type="submit" class="submit">Add Room</button>
+    <button type="reset" class="reset">Reset</button>
+  </div>
+</form>
+{% endblock %}
