@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="{% url 'reservation' %}" method="POST">
+  {% csrf_token %}
+  <fieldset>
+    <legend>Reservation Details</legend>
+    
+    <div class="row">
+      <div class="field">
+        <label>Select Guest <span class="req">*</span></label>
+        <select name="guest_id" required>
+          <option value="" disabled selected>Select Guest</option>
+          {% for guest in guests %}
+            <option value="{{ guest.0 }}">{{ guest.1 }} (NID: {{ guest.2 }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label>Select Booking Source <span class="req">*</span></label>
+        <select name="booking_source_id" required>
+          <option value="" disabled selected>Select Source</option>
+          {% for source in sources %}
+            <option value="{{ source.0 }}">{{ source.1 }}</option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>Select Room <span class="req">*</span></label>
+        <select name="room_number" required>
+          <option value="" disabled selected>Select Room</option>
+          {% for room in rooms %}
+            <option value="{{ room.0 }}">Room {{ room.0 }} (Status: {{ room.1 }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="field">
+        <label>Reservation Status <span class="req">*</span></label>
+        <select name="reservation_status" required>
+          <option value="pending" selected>Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="checked_in">Checked In</option>
+          <option value="checked_out">Checked Out</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>Check In Date <span class="req">*</span></label>
+        <input type="date" name="check_in_date" required>
+      </div>
+      <div class="field">
+        <label>Check Out Date <span class="req">*</span></label>
+        <input type="date" name="check_out_date" required>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>Departed From <span class="req">*</span></label>
+        <input type="text" name="departed_from" placeholder="e.g. Dhaka" required>
+      </div>
+      <div class="field">
+        <label>Reason to Stay <span class="req">*</span></label>
+        <input type="text" name="reason_to_stay" placeholder="e.g. Business, Vacation" required>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="actions">
+    <button type="submit" class="submit">Create Reservation</button>
+    <button type="reset" class="reset">Reset</button>
+  </div>
+</form>
+{% endblock %}

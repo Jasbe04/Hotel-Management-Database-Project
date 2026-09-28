@@ -1,42 +1,40 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form action="/submit-room" method="POST">
+<form action="{% url 'room' %}" method="POST">
+  {% csrf_token %}
   <fieldset>
-    <legend>Room Management</legend>
+    <legend>Room Details</legend>
     <div class="row">
       <div class="field">
         <label>Room Number <span class="req">*</span></label>
-        <input type="text" name="room_number" placeholder="101" required>
+        <input type="text" name="room_number" placeholder="e.g. 101" required>
       </div>
       <div class="field">
-        <label>Floor <span class="req">*</span></label>
-        <input type="number" name="floor" placeholder="1" min="1" required>
+        <label>Room Category <span class="req">*</span></label>
+        <select name="room_category_id" required>
+          <option value="" disabled selected>Select Category</option>
+          {% for category in categories %}
+            <option value="{{ category.0 }}">{{ category.1 }} (${{ category.2 }})</option>
+          {% endfor %}
+        </select>
       </div>
     </div>
     <div class="row">
       <div class="field">
-        <label>Room Category <span class="req">*</span></label>
-        <select name="category_id" required>
-          <option value="" disabled selected>Select Category</option>
-          <option value="1">Standard Single</option>
-          <option value="2">Deluxe Double</option>
-          <option value="3">Executive Suite</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>Status <span class="req">*</span></label>
-        <select name="status" required>
-          <option value="Available">Available</option>
-          <option value="Occupied">Occupied</option>
-          <option value="Maintenance">Maintenance</option>
-          <option value="Cleaning">Cleaning</option>
+        <label>Room Status <span class="req">*</span></label>
+        <select name="room_status" required>
+          <option value="available" selected>Available</option>
+          <option value="occupied">Occupied</option>
+          <option value="maintenance">Maintenance</option>
+          <option value="reserved">Reserved</option>
+          <option value="pending">Pending</option>
         </select>
       </div>
     </div>
   </fieldset>
   <div class="actions">
-    <button type="submit" class="submit">Add Room</button>
+    <button type="submit" class="submit">Save Room</button>
     <button type="reset" class="reset">Reset</button>
   </div>
 </form>

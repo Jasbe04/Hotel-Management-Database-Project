@@ -1,51 +1,52 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form action="/submit-guest" method="POST">
+<form action="{% url 'guest' %}" method="POST">
+  {% csrf_token %}
   <fieldset>
     <legend>Guest Details</legend>
+    
     <div class="row">
       <div class="field">
-        <label>First Name <span class="req">*</span></label>
-        <input type="text" name="first_name" placeholder="John" required>
+        <label>Guest Name <span class="req">*</span></label>
+        <input type="text" name="guest_name" placeholder="Enter guest's name" required>
       </div>
       <div class="field">
-        <label>Last Name <span class="req">*</span></label>
-        <input type="text" name="last_name" placeholder="Doe" required>
+        <label>Guardian Name</label>
+        <input type="text" name="guardian_name" placeholder="Enter guardian's name">
       </div>
     </div>
+
     <div class="row">
       <div class="field">
-        <label>Email Address <span class="req">*</span></label>
-        <input type="email" name="email" placeholder="john@example.com" required>
+        <label>Age <span class="req">*</span></label>
+        <input type="number" name="age" min="1" max="120" placeholder="e.g. 34" required>
       </div>
+      <div class="field">
+        <label>Occupation</label>
+        <input type="text" name="occupation" placeholder="e.g. Engineer">
+      </div>
+    </div>
+
+    <div class="row">
       <div class="field">
         <label>Phone Number <span class="req">*</span></label>
-        <input type="tel" name="phone" placeholder="+1 234 567 890" required>
-      </div>
-    </div>
-    <div class="row">
-      <div class="field">
-        <label>ID Type <span class="req">*</span></label>
-        <select name="id_type" required>
-          <option value="" disabled selected>Select ID Type</option>
-          <option value="Passport">Passport</option>
-          <option value="National ID">National ID</option>
-          <option value="Driver License">Driver's License</option>
-        </select>
+        <input type="tel" name="phone_number" placeholder="Enter phone number" required>
       </div>
       <div class="field">
-        <label>ID / Passport Number <span class="req">*</span></label>
-        <input type="text" name="id_number" placeholder="A12345678" required>
+        <label>NID Number <span class="req">*</span></label>
+        <input type="text" name="nid" placeholder="e.g. 1990123456001" required>
       </div>
     </div>
+
     <div class="row">
       <div class="field full">
-        <label>Address</label>
-        <textarea name="address" rows="2" placeholder="Street Address, City, Country"></textarea>
+        <label>Address <span class="req">*</span></label>
+        <textarea name="address" rows="2" placeholder="e.g. Khulna, Bangladesh" required></textarea>
       </div>
     </div>
   </fieldset>
+
   <div class="actions">
     <button type="submit" class="submit">Save Guest</button>
     <button type="reset" class="reset">Reset</button>

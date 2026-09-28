@@ -63,12 +63,12 @@
     }
 
     .nav a {
-      flex: 1 1 calc(25% - 6px);
+      flex: 1 1 calc(33.33% - 6px);
       text-align: center;
       padding: 8px 10px;
       color: #4a5568;
       text-decoration: none;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 600;
       border-radius: 6px;
       transition: all 0.2s ease;
@@ -152,11 +152,14 @@
       box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.15);
     }
 
-    .hint {
-      font-size: 12px;
-      color: #7f8c8d;
-      margin-top: 4px;
-      line-height: 1.4;
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-bottom: 16px;
+      font-size: 13px;
     }
 
     /* Buttons */
@@ -208,41 +211,40 @@
 
 <body>
   <div class="container">
-    <!-- Header Section -->
     <div class="header">
       <h1>Hotel Management System</h1>
       <p class="sub">Data Entry Form Management</p>
     </div>
 
-    <!-- Navigation Tabs -->
+    <!-- Navigation Bar without Registration and Invoice -->
     <nav class="nav">
-      <a href="registration_form.html" class="nav-link">Registration</a>
-      <a href="guest_form.html" class="nav-link">Guest</a>
-      <a href="room_form.html" class="nav-link">Room</a>
-      <a href="category_form.html" class="nav-link">Category</a>
-      <a href="booking_source_form.html" class="nav-link">Booking Source</a>
-      <a href="payment_method_form.html" class="nav-link">Payment Method</a>
-      <a href="reservation_form.html" class="nav-link">Reservation</a>
-      <a href="invoice_form.html" class="nav-link">Invoice</a>
+      <a href="{% url 'guest' %}" class="nav-link">Guest</a>
+      <a href="{% url 'room' %}" class="nav-link">Room</a>
+      <a href="{% url 'category' %}" class="nav-link">Category</a>
+      <a href="{% url 'booking_source' %}" class="nav-link">Booking Source</a>
+      <a href="{% url 'payment_method' %}" class="nav-link">Payment Method</a>
+      <a href="{% url 'reservation' %}" class="nav-link">Reservation</a>
     </nav>
 
-    <!-- Main Dynamic Content Block -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert-success">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
     <main id="content">
       {% block content %}
-      <!-- Extending pages will place their form fields here -->
       {% endblock %}
     </main>
 
-    <!-- Global Footer -->
     <footer class="footer">
-      <p class="hint">Foreign keys (Guest, Room, Reservation, Category, Booking Source, Payment Method) are populated dynamically or from predefined data sources.</p>
+      <p>Foreign keys are loaded dynamically from database tables.</p>
     </footer>
   </div>
 
   <script>
-    // Automatically highlights the active nav link based on current page URL
     document.addEventListener("DOMContentLoaded", () => {
-      const currentPath = window.location.pathname.split("/").pop();
+      const currentPath = window.location.pathname;
       const navLinks = document.querySelectorAll(".nav-link");
 
       navLinks.forEach(link => {
